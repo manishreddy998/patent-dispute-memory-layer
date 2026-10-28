@@ -1,0 +1,13 @@
+{
+  "concurrency": 20,
+  "pages_processed": 1080,
+  "cache_hits": 0,
+  "mentions_extracted": 3600,
+  "receipts_verified_exact": 3600,
+  "estimated_input_tokens": 611000,
+  "estimated_output_tokens": 1400632,
+  "estimated_total_cost_usd": 0.466,
+  "estimated_cost_per_doc_usd": 0.00104,
+  "extraction_seconds": 0.22,
+  "docs_per_second": 2045.5
+}
