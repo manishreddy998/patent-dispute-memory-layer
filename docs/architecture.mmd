@@ -1,0 +1,25 @@
+flowchart TB
+  USPTO[USPTO File Wrapper and Office Actions PDF] --> RAW
+  PTAB[PTAB IPR Petitions and Institution Decisions PDF] --> RAW
+  ITC[ITC Section 337 Investigation Filings PDF] --> RAW
+  DC[District Court Markman and CAFC Mandates PDF] --> RAW
+  subgraph Pipeline [Cloud Composer and Beam Job]
+    RAW[(Warehouse raw<br/>sha256 per docket PDF and page)] --> EXT[Structured position extractor<br/>20 way async, sha256 cache]
+    EXT --> STG[dbt staging<br/>schedule math, cancelled IPR claims]
+    STG --> RES[Entity and claim resolver<br/>blocking, logistic regression, union find]
+    RES --> CHN[dbt temporal state chains<br/>cross venue scope shifts, superseded filings]
+    CHN --> EV[(Legal memory store<br/>claim scope, docket PDF, page and line,<br/>verbatim quote, sha256, doctrine)]
+    EV --> MRT[dbt marts<br/>positions, family exposure, scoreboard]
+  end
+  subgraph Verify [Rule 11 receipt engine]
+    Q[Attorney query] --> L[Memory lookup] --> RC[Docket receipt]
+    RC --> M[Summary writer<br/>one checked sentence]
+    M --> CK{Rule 11 claim gate<br/>every figure, docket id and code<br/>must be on the receipt}
+    RC --> CK
+    CK -->|cited| OUT[Answer with docket receipt]
+    CK -->|not cited| REF[Refuse]
+  end
+  EV --> L
+  OUT --> UI[Dashboard and FastAPI<br/>links open the docket PDF page and line]
+  BK[50 break it questions<br/>and an auditor that reopens all 450 PDFs] --> CK
+  BK --> CI[CI fails on any unsupported claim]
