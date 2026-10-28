@@ -1,0 +1,28 @@
+name: "patent_dispute_memory"
+version: "1.0.0"
+config-version: 2
+
+profile: "patent_dispute_memory"
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  patent_dispute_memory:
+    staging:
+      +schema: staging
+      +materialized: view
+      +tags: ["staging"]
+    intermediate:
+      +schema: core
+      +materialized: table
+      +tags: ["marts"]
+    marts:
+      +schema: marts
+      +materialized: table
+      +tags: ["marts"]

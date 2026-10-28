@@ -1,0 +1,7 @@
+patent_dispute_memory:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DUCKDB_PATH', '../data/patent_dispute_memory.duckdb') }}"
+      threads: 4
